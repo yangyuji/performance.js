@@ -29,14 +29,9 @@
         // 获取缩放值
         var viewport = document.getElementsByTagName('meta')['viewport'];
         if (viewport && viewport['content']) {
-            var arr = viewport['content'].split(',');
-            var reg = new RegExp("initial-scale=[\\']?([^\\'>]+)[\\']?", "i");
-            for (var i = 0; i < arr.length; i++) {
-                var ret = arr[i].match(reg);
-                if (ret && ret.length > 1) {
-                    scale = parseFloat(ret[1]);
-                    break;
-                }
+            var match = viewport['content'].match(/initial\-scale=([\d\.]+)/);
+            if (match && match.length > 1) {
+                scale = parseFloat(match[1]);
             }
         }
         // console.log(scale);
@@ -145,6 +140,11 @@
         var timeLong = 0;
         document.body.addEventListener('touchstart', function (e) {
             timeLong = new Date().getTime();
+        }, false);
+
+        document.body.addEventListener('touchcancel', function (e) {
+            // 待做：处理那些浏览器弹出菜单
+            timeLong = 0;
         }, false);
 
         document.body.addEventListener('touchend', function (e) {
